@@ -14,7 +14,7 @@ class OrdersCollection{
 		if(getOrderArraySize()==0){
 			return "ODR#00001";
 		}else{
-			int lastNumber=Integer.parseInt(orderArray[orderArray.length-1].getOrderId().substring(1));
+			int lastNumber=Integer.parseInt(orderArray[orderArray.length-1].getOrderId().substring(4));
 			return String.format("ODR#%05d",lastNumber+1);
 		}
 	}
@@ -86,7 +86,7 @@ class OrdersCollection{
             tempOrderArray[i] = orderArray[i];
         }
 
-        tempOrderArray[orderArray.length-1] = order;
+        tempOrderArray[tempOrderArray.length-1] = order;
         orderArray = tempOrderArray;
         return true;
     }

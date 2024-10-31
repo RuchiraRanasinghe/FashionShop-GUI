@@ -25,7 +25,7 @@ class PlaceOrderForm extends JFrame{
     private boolean isTpNumber;
     private boolean isSize;
     private boolean isQty;
-
+	private double amount;
 
     // private String orderId;
 
@@ -131,13 +131,20 @@ class PlaceOrderForm extends JFrame{
         txtQty = new JTextField();
         txtQty.setBounds(150, 180, 150, 30);
 
+        txtAmount = new JLabel("0.00");
+        txtAmount.setBounds(150, 220, 150, 30);
+        add(txtAmount);
+        
         // Quantity Validation
         txtQty.addActionListener(new ActionListener(){
             public void actionPerformed(ActionEvent evt){
                 isQty = ordersCollection.getQuantity(txtQty.getText());
                 if(!isQty){
                     JOptionPane.showMessageDialog(null,"Quantity is Not Valid");
-                }
+                }else{
+					amount = ordersCollection.getAmount(txtQty.getText(),txtSize.getText());
+                    txtAmount.setText(String.valueOf(amount));
+				}
             }
         });
         add(txtQty);
@@ -148,11 +155,6 @@ class PlaceOrderForm extends JFrame{
         lblAmount.setFont(new Font("SansSerif", Font.PLAIN, 14));
         add(lblAmount);
 
-        txtAmount = new JLabel("0.00");
-        double amount = ordersCollection.getAmount(txtQty.getText(),txtSize.getText());
-        txtAmount.setText(String.valueOf(amount));
-        txtAmount.setBounds(150, 220, 150, 30);
-        add(txtAmount);
 
         // Place button
         btnPlaceOrder = new JButton("Place");
@@ -167,7 +169,7 @@ class PlaceOrderForm extends JFrame{
                 double amount = ordersCollection.getAmount(txtQty.getText(),txtSize.getText());
                 txtAmount.setText(String.valueOf(amount));
                 
-                if((isTpNumber) && (isSize) && (isQty)){
+                //if((isTpNumber) && (isSize) && (isQty)){
                     String orderId = lblOrderIdValue.getText();
                     String phoneNumber = txtCustomerId.getText();
                     String size = txtSize.getText();
@@ -181,9 +183,9 @@ class PlaceOrderForm extends JFrame{
 
                     dispose();
                     new PlaceOrderForm(ordersCollection).setVisible(true);
-                }else{
-                    JOptionPane.showMessageDialog(null,"Order Place UnSuccessful");
-                }
+                //}else{
+                   // JOptionPane.showMessageDialog(null,"Order Place UnSuccessful");
+                //}
             }
         });        
         add(btnPlaceOrder);
