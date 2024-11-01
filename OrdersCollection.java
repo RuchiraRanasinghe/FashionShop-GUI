@@ -19,6 +19,26 @@ class OrdersCollection{
 		}
 	}
 
+    public Order[] searchCustomerID(String custId) {
+        int count = 0;
+        for (Order order : orderArray) {
+            if (order.getCustomerID().equalsIgnoreCase(custId)) {
+                count++;
+            }
+        }
+        if (count == 0) {
+            return new Order[0];
+        }
+        Order[] foundOrders = new Order[count];
+        int index = 0;
+        for (Order order : orderArray) {
+            if (order.getCustomerID().equalsIgnoreCase(custId)) {
+                foundOrders[index++] = order;
+            }
+        }
+        return foundOrders;
+    }
+
 	// Phone Number Validation
 	public boolean getPhoneNumber(String cusPhoneNumber) {
         if (cusPhoneNumber.length() != 10 || cusPhoneNumber.charAt(0) != '0') {
@@ -90,4 +110,6 @@ class OrdersCollection{
         orderArray = tempOrderArray;
         return true;
     }
+
+
 }

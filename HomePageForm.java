@@ -43,6 +43,7 @@ class HomePageForm extends JFrame{
 		btnSearch.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent evt){
 				searchOptionAlert();
+				//dispose();
 			}
 		});
 		buttonPanel.add(btnSearch);
@@ -52,7 +53,7 @@ class HomePageForm extends JFrame{
 		btnStatus.setFont(new Font("",1,20));
 		btnStatus.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent evt){
-				searchOptionAlert();
+				//Status Option
 			}
 		});
 		buttonPanel.add(btnStatus);
@@ -108,7 +109,7 @@ class HomePageForm extends JFrame{
         setVisible(true);
 
 	}
-	public static void searchOptionAlert(){
+	public void searchOptionAlert(){
 		Object[] options = {"Search Customer", "Search Order", "Cancel"};
         
         // Show the option dialog
@@ -124,13 +125,18 @@ class HomePageForm extends JFrame{
         // Handle the user's choice
         switch (choice) {
             case 0:
-                new SearchCustomerForm().setVisible(true);
+				new SearchCustomerForm(ordersCollection).setVisible(true);
                 break;
             case 1:
                 //new searchOrderForm().setVisible(true);
                 break;
             case 2:
                 //Alert Canceled
+				// ((AbstractButton) options[2]).addActionListener(new ActionListener(){
+				// 	public void actionPerformed(ActionEvent evt){
+				// 		new HomePageForm(ordersCollection);
+				// 	}
+				// });
                 break;
             default:
                 System.out.println("Alert closed without selection");

@@ -3,4 +3,4 @@ class FashionShop{
 		OrdersCollection ordersCollection = new OrdersCollection();
 		new HomePageForm(ordersCollection).setVisible(true);
 	}
-}
+} 

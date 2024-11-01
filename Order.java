@@ -22,7 +22,7 @@ class Order {
         return orderId;
     }
     
-    public String getcustomerID() {
+    public String getCustomerID() {
         return customerID;
     }
 
