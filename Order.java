@@ -66,5 +66,11 @@ class Order {
     public void setStatus(String status) {
         this.status = status;
     }
+    // View Customer 
+	public void setViewCustomer(String customerID,int quantity,double amount){
+		this.customerID=customerID;
+		this.quantity=quantity;
+		this.amount=amount;
+	}
 }
 

@@ -19,6 +19,46 @@ class OrdersCollection{
 		}
 	}
 
+    // View Customers
+    public Order[] viewCustomer(){
+        Order[] viewCustomer = new Order[orderArray.length];
+        boolean[] equalPass = new boolean [orderArray.length];
+        int count=0;
+
+        for(int i=0; i<orderArray.length; i++){
+            if(equalPass[i]){
+                continue;
+            }
+
+            viewCustomer[count]=new Order();
+
+            int tempQty = orderArray[i].getQuantity();
+            double tempAmount=orderArray[i].getAmount();
+            equalPass[i]=true;
+
+            for(int j=i+1; j<orderArray.length; j++){
+                if(orderArray[i].getCustomerID().equals(orderArray[j].getCustomerID())){
+                    tempQty+=orderArray[i].getQuantity();
+                    tempAmount+=orderArray[i].getAmount();
+                    equalPass[j]=true;
+                }
+            }
+
+            String cusPhoneNumber = orderArray[i].getCustomerID();
+            viewCustomer[count].setViewCustomer(cusPhoneNumber, tempQty, tempAmount);
+            count++;
+        }
+        return viewCustomer;
+    }
+
+    public Order[] getOrderObject(){
+		Order[] tempOrderArray=new Order[orderArray.length];
+		for (int i = 0; i < orderArray.length; i++){
+			tempOrderArray[i]=orderArray[i];
+		}
+		return tempOrderArray;
+	}
+
     public Order searchOrder(String orderId){
         for(int i=0; i<orderArray.length; i++){
             if(orderArray[i].getOrderId().equalsIgnoreCase(orderId)){

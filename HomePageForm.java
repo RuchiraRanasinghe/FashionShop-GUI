@@ -63,7 +63,8 @@ class HomePageForm extends JFrame{
 		btnReports.setFont(new Font("",1,20));
 		btnReports.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent evt){
-				//Reports Action
+				dispose();
+				new ReportsForm(ordersCollection).setVisible(true);
 			}
 		});
 		buttonPanel.add(btnReports);
