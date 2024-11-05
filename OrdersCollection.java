@@ -19,6 +19,15 @@ class OrdersCollection{
 		}
 	}
 
+    public Order searchOrder(String orderId){
+        for(int i=0; i<orderArray.length; i++){
+            if(orderArray[i].getOrderId().equalsIgnoreCase(orderId)){
+                return orderArray[i];
+            }
+        }
+        return null;
+    }
+
     public Order[] searchCustomerID(String custId) {
         int count = 0;
         for (Order order : orderArray) {
@@ -110,6 +119,4 @@ class OrdersCollection{
         orderArray = tempOrderArray;
         return true;
     }
-
-
 }

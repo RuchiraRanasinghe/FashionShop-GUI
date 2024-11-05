@@ -31,7 +31,7 @@ public class SearchCustomerForm extends JFrame {
 
         btnBack.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent evt) {
-                dispose();
+                dispose(); 
             }
         });
 
@@ -84,9 +84,9 @@ public class SearchCustomerForm extends JFrame {
         add(centerPanel, BorderLayout.CENTER);
 
         // ----------------- Total Panel -----------------
-        JPanel bottomPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+        JPanel bottonPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
         totalLabel = new JLabel("");
-        bottomPanel.add(totalLabel);
-        add(bottomPanel, BorderLayout.SOUTH);
+        bottonPanel.add(totalLabel);
+        add(bottonPanel, BorderLayout.SOUTH);
     }
 }

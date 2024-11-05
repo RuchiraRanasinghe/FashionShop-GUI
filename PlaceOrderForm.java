@@ -41,7 +41,6 @@ class PlaceOrderForm extends JFrame{
         setLocationRelativeTo(null);
         setLayout(null);
 
-
         // Back button
         btnBack = new JButton("Back");
         btnBack.setBounds(10, 10, 80, 30);

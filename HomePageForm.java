@@ -91,7 +91,7 @@ class HomePageForm extends JFrame{
 		buttonPanel.add(btnPlaceOrder);
 
 		// Image label
-        ImageIcon fashionImage = new ImageIcon("E:\\ICET\\Example\\images\\fashionShop1-removebg-preview.png"); // Replace with your image path
+        ImageIcon fashionImage = new ImageIcon("E:\\ICET\\FashionShop - GUI\\Images\\fashionShop1.png"); // Replace with your image path
         imageLabel = new JLabel(fashionImage);
         imageLabel.setBounds(320, 100, 200, 350); // Position image on the right
         buttonPanel.add(imageLabel);
@@ -128,7 +128,7 @@ class HomePageForm extends JFrame{
 				new SearchCustomerForm(ordersCollection).setVisible(true);
                 break;
             case 1:
-                //new searchOrderForm().setVisible(true);
+                new SearchOrderForm(ordersCollection).setVisible(true);
                 break;
             case 2:
                 //Alert Canceled
