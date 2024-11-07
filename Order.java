@@ -72,5 +72,12 @@ class Order {
 		this.quantity=quantity;
 		this.amount=amount;
 	}
+
+    // Best in customers
+	public void setBestInCustomers(String customerID,int quantiity,double amount){
+		this.customerID=customerID;
+		this.quantity=quantiity;
+		this.amount=amount;
+	}
 }
 

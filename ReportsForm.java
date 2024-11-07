@@ -58,8 +58,8 @@ class ReportsForm extends JFrame{
         btnBestInCus.setFont(new Font("SansSerif", Font.BOLD, 14));
         btnBestInCus.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent evt){
-                // dispose();
-                // new BestInCusForm(ordersCollection).setVisible(true);
+                dispose();
+                new BestInCusForm(ordersCollection).setVisible(true);
             }
         });
         add(btnBestInCus);
@@ -71,8 +71,8 @@ class ReportsForm extends JFrame{
         btnAllCus.setFont(new Font("SansSerif", Font.BOLD, 14));
         btnAllCus.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent evt){
-                // dispose();
-                // new AllCustomersForm(ordersCollection).setVisible(true);
+                dispose();
+                new AllCustomersForm(ordersCollection).setVisible(true);
             }
         });
         add(btnAllCus);
@@ -84,8 +84,8 @@ class ReportsForm extends JFrame{
         btnCatByQty.setFont(new Font("SansSerif", Font.BOLD, 14));
         btnCatByQty.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent evt){
-                // dispose();
-                // new CatByQtyForm(ordersCollection).setVisible(true);
+                dispose();
+                new CatByQtyForm(ordersCollection).setVisible(true);
             }
         });
         add(btnCatByQty);

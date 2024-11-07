@@ -19,6 +19,144 @@ class OrdersCollection{
 		}
 	}
 
+    // Best In Customers Sorting Part
+    public Order[] bestInCusSort(){
+        Order[] viewBestCustomers = new Order[orderArray.length];
+        boolean [] equalPass = new boolean[orderArray.length];
+        int count=0;
+        
+        for(int i=0; i<orderArray.length; i++){
+            if(equalPass[i]){
+                continue;
+            }
+
+            viewBestCustomers[count]=new Order();
+
+            int tempqty = orderArray[i].getQuantity();
+            double tempAmount = orderArray[i].getAmount();
+            equalPass[i]=true;
+
+            for(int j=i+1; j<orderArray.length; j++){
+                if(orderArray[i].getCustomerID().equals(orderArray[j].getCustomerID())){
+                    tempqty+=orderArray[j].getQuantity();
+                    tempAmount+=orderArray[j].getAmount();
+                    equalPass[j]=true;
+                }                
+            }
+            String customerPhoneNumber = orderArray[i].getCustomerID();
+
+            viewBestCustomers[count].setBestInCustomers(customerPhoneNumber, tempqty, tempAmount);            
+            count++;
+        }
+               
+        // Sorting loop in best in customer....
+        for(int i=count-1; i>0; i--){           
+            for(int j=0; j<i; j++){    
+                if(viewBestCustomers[j] != null && viewBestCustomers[j+1] != null){
+                    if(viewBestCustomers[j].getQuantity()!=0 && viewBestCustomers[j+1].getQuantity()!=0){
+                        if(viewBestCustomers[j].getAmount()<viewBestCustomers[j+1].getAmount()){                   
+                            Order swap = viewBestCustomers[j];
+                            viewBestCustomers[j]=viewBestCustomers[j+1];
+                            viewBestCustomers[j+1]=swap;                    
+                        }
+                    }
+
+                }              
+            }
+        }
+        return viewBestCustomers;
+
+    }
+
+    // All Customer
+    public AllCustomers[] allCustomersReport(){
+        AllCustomers[] allCustomerDetails = new AllCustomers[orderArray.length];
+        
+        for(int i=0; i<allCustomerDetails.length; i++){
+            allCustomerDetails[i]=new AllCustomers();
+        }
+
+        boolean equalPass[] = new boolean[orderArray.length];
+        for(int i=0; i<orderArray.length; i++){
+            if(equalPass[i]){
+                continue;
+            }
+
+            int tempMedium2=0;
+            int tempXtraSmall2=0;
+            int tempXtraXl2=0;
+            int tempXtraLarge2=0;
+            int tempSmall2=0;
+            int tempLarge2=0;
+            double tempAmount2=0;
+
+            String customerPhoneNumber = orderArray[i].getCustomerID();
+            
+            allCustomerDetails[i].setPhoneNumber(customerPhoneNumber);
+
+            if(orderArray[i].getSize().equals("M")){
+                tempMedium2=orderArray[i].getQuantity();
+                allCustomerDetails[i].setMedium(tempMedium2);
+
+            }else if (orderArray[i].getSize().equals("XS")){
+                tempXtraSmall2=orderArray[i].getQuantity();
+                allCustomerDetails[i].setXtraSmall(tempXtraSmall2);
+
+            }else if(orderArray[i].getSize().equals("XXL")){
+                tempXtraXl2=orderArray[i].getQuantity();
+                allCustomerDetails[i].setXtraXl(tempXtraXl2);
+
+            }else if(orderArray[i].getSize().equals("XL")){
+                tempXtraLarge2=orderArray[i].getQuantity();
+                allCustomerDetails[i].setXtraLarge(tempXtraLarge2);
+
+            }else if(orderArray[i].getSize().equals("S")){
+                tempSmall2=orderArray[i].getQuantity();
+                allCustomerDetails[i].setSmall(tempSmall2);
+
+            }else if(orderArray[i].getSize().equals("L")){
+                tempLarge2=orderArray[i].getQuantity();
+                allCustomerDetails[i].setLarge(tempLarge2);
+            }
+
+            tempAmount2=orderArray[i].getAmount();  
+            allCustomerDetails[i].setAmount(tempAmount2);           
+            equalPass[i]=true;            
+    
+            for(int j=i+1; j<orderArray.length; j++){
+                if(orderArray[i].getCustomerID().equals(orderArray[j].getCustomerID())){                                             
+                allCustomerDetails[i].setPhoneNumber(customerPhoneNumber);
+
+                if(orderArray[i].getSize().equals("M")){
+                    tempMedium2=orderArray[i].getQuantity();
+                    allCustomerDetails[i].setMedium(tempMedium2);    
+                }else if (orderArray[i].getSize().equals("XS")){
+                    tempXtraSmall2=orderArray[i].getQuantity();
+                    allCustomerDetails[i].setXtraSmall(tempXtraSmall2);
+                }else if(orderArray[i].getSize().equals("XXL")){
+                    tempXtraXl2=orderArray[i].getQuantity();
+                    allCustomerDetails[i].setXtraXl(tempXtraXl2);
+                }else if(orderArray[i].getSize().equals("XL")){
+                    tempXtraLarge2=orderArray[i].getQuantity();
+                    allCustomerDetails[i].setXtraLarge(tempXtraLarge2);
+                }else if(orderArray[i].getSize().equals("S")){
+                    tempSmall2=orderArray[i].getQuantity();
+                    allCustomerDetails[i].setSmall(tempSmall2);
+                }else if(orderArray[i].getSize().equals("L")){
+                    tempLarge2=orderArray[i].getQuantity();
+                    allCustomerDetails[i].setLarge(tempLarge2);
+                }
+    
+                tempAmount2=orderArray[i].getAmount();  
+                allCustomerDetails[i].setAmount(tempAmount2);           
+                equalPass[i]=true;            
+                }                
+            }           
+        } 
+        return allCustomerDetails; 
+
+    }
+
     // View Customers
     public Order[] viewCustomer(){
         Order[] viewCustomer = new Order[orderArray.length];
@@ -49,6 +187,95 @@ class OrdersCollection{
             count++;
         }
         return viewCustomer;
+    }
+
+    // Sorting by Quantity
+    public Sorting[] sortByQty(){
+        Sorting [] sortingByQuantity = new Sorting[6];
+        for(int i=0; i<sortingByQuantity.length; i++){
+            sortingByQuantity[i]=new Sorting();
+        }
+
+        sortingByQuantity[0].setSize("M");
+        sortingByQuantity[1].setSize("Xl");
+        sortingByQuantity[2].setSize("XS");
+        sortingByQuantity[3].setSize("S");
+        sortingByQuantity[4].setSize("XXL");
+        sortingByQuantity[5].setSize("L");
+
+        int tempM4=0;
+        int tempXs4=0;
+        int tempXtraXl4=0;
+        int tempXLarge4=0;
+        int tempSmall4=0;
+        int tempLarge4=0;
+
+        int mtotal=0;
+        int xstotal=0;
+        int xtraxltotal=0;
+        int xlargetotal=0;
+        int smalltotal=0;
+        int largetotal=0;
+
+        sortingByQuantity[0].setQuantity(0);
+        sortingByQuantity[1].setQuantity(0);
+        sortingByQuantity[2].setQuantity(0);
+        sortingByQuantity[3].setQuantity(0);
+        sortingByQuantity[4].setQuantity(0);
+        sortingByQuantity[5].setQuantity(0);
+
+        for(int i=0; i<orderArray.length; i++){
+            if(orderArray[i].getSize().equals("M")){
+                tempM4+=orderArray[i].getQuantity();
+                sortingByQuantity[0].setQuantity(tempM4);
+
+            }else if (orderArray[i].getSize().equals("XL")){
+                tempXLarge4+=orderArray[i].getQuantity();
+                sortingByQuantity[1].setQuantity(tempXLarge4);
+
+            }else if(orderArray[i].getSize().equals("XS")){
+                tempXs4+=orderArray[i].getQuantity();
+                sortingByQuantity[2].setQuantity(tempXs4);
+
+            }else if(orderArray[i].getSize().equals("S")){
+                tempSmall4+=orderArray[i].getQuantity();
+                sortingByQuantity[3].setQuantity(tempSmall4);
+
+            }else if(orderArray[i].getSize().equals("XXL")){
+                tempXtraXl4+=orderArray[i].getQuantity();
+                sortingByQuantity[4].setQuantity(tempXtraXl4);
+
+            }else if(orderArray[i].getSize().equals("L")){
+                tempLarge4+=orderArray[i].getQuantity();
+                sortingByQuantity[5].setQuantity(tempLarge4);
+            }
+
+            mtotal=tempM4*900;
+            xlargetotal=tempXLarge4*1100;
+            xstotal=tempXs4*600;
+            smalltotal=tempSmall4*800;
+            xtraxltotal=tempXtraXl4*1200;           
+            largetotal=tempLarge4*1000;
+
+            sortingByQuantity[0].setAmount((double)mtotal);
+            sortingByQuantity[1].setAmount((double)xlargetotal);
+            sortingByQuantity[2].setAmount((double)xstotal);
+            sortingByQuantity[3].setAmount((double)smalltotal);
+            sortingByQuantity[4].setAmount((double)xtraxltotal);
+            sortingByQuantity[5].setAmount((double)largetotal);
+          
+        }
+        // sorting part for quantity
+        for(int i=5; i>0; i--){
+            for(int j=0; j<i; j++){
+                if(sortingByQuantity[j].getQuantity()<sortingByQuantity[j+1].getQuantity()){
+                    Sorting swap = sortingByQuantity[j];
+                    sortingByQuantity[j]=sortingByQuantity[j+1];
+                    sortingByQuantity[j+1]=swap;
+                }
+            }
+        }
+        return sortingByQuantity;
     }
 
     public Order[] getOrderObject(){
