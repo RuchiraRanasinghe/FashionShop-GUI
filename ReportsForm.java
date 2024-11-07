@@ -97,8 +97,8 @@ class ReportsForm extends JFrame{
         btnCatByAmount.setFont(new Font("SansSerif", Font.BOLD, 14));
         btnCatByAmount.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent evt){
-                // dispose();
-                // new CatByAmountForm(ordersCollection).setVisible(true);
+                dispose();
+                new CatByAmountForm(ordersCollection).setVisible(true);
             }
         });
         add(btnCatByAmount);
@@ -110,8 +110,8 @@ class ReportsForm extends JFrame{
         btnOrderByAmount.setFont(new Font("SansSerif", Font.BOLD, 14));
         btnOrderByAmount.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent evt){
-                // dispose();
-                // new OrdersByAmountForm(ordersCollection).setVisible(true);
+                dispose();
+                new OByAmountForm(ordersCollection).setVisible(true);
             }
         });
         add(btnOrderByAmount);
@@ -123,8 +123,8 @@ class ReportsForm extends JFrame{
         btnAllOrders.setFont(new Font("SansSerif", Font.BOLD, 14));
         btnAllOrders.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent evt){
-                // dispose();
-                // new AllOrdersForm(ordersCollection).setVisible(true);
+                dispose();
+                new AllOrdersForm(ordersCollection).setVisible(true);
             }
         });
         add(btnAllOrders);

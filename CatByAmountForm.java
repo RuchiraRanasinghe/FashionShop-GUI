@@ -1,18 +1,18 @@
 import javax.swing.*;
+import javax.swing.table.*;
 import java.awt.*;
 import java.awt.event.*;
-import javax.swing.table.*;
 
-class CatByQtyForm extends JFrame {
+class CatByAmountForm extends JFrame {
     private JButton btnBack;
 
     private OrdersCollection ordersCollection;
-    
-    CatByQtyForm(OrdersCollection ordersCollection){
+
+    CatByAmountForm(OrdersCollection ordersCollection){
         this.ordersCollection = ordersCollection;
 
         setSize(400,400);
-        setTitle("Items By Qty");
+        setTitle("Items By Amount");
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
         setLayout(null);
@@ -32,13 +32,12 @@ class CatByQtyForm extends JFrame {
             }
         });
 
-        // table
         String[] colNames = {"Size","QTY","Amount"};
         DefaultTableModel dtm = new DefaultTableModel(colNames,0);
 
-        Sorting[] sortQty = ordersCollection.sortByQty();
-        for(int i=0; i<sortQty.length; i++){
-            Object[] rowData = {sortQty[i].getSize(),sortQty[i].getQuantity(),sortQty[i].getAmount()};
+        Sorting[] sortAmount = ordersCollection.sortByAmount();
+        for(int i=0; i<sortAmount.length; i++){
+            Object[] rowData = {sortAmount[i].getSize(),sortAmount[i].getQuantity(),sortAmount[i].getAmount()};
             dtm.addRow(rowData);
         }
 

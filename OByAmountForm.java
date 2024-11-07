@@ -1,18 +1,18 @@
 import javax.swing.*;
+import javax.swing.table.*;
 import java.awt.*;
 import java.awt.event.*;
-import javax.swing.table.*;
 
-class CatByQtyForm extends JFrame {
+public class OByAmountForm extends JFrame {
     private JButton btnBack;
 
     private OrdersCollection ordersCollection;
-    
-    CatByQtyForm(OrdersCollection ordersCollection){
+
+    OByAmountForm(OrdersCollection ordersCollection){
         this.ordersCollection = ordersCollection;
 
-        setSize(400,400);
-        setTitle("Items By Qty");
+        setSize(800,400);
+        setTitle("Items By Amount");
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
         setLayout(null);
@@ -32,19 +32,19 @@ class CatByQtyForm extends JFrame {
             }
         });
 
-        // table
-        String[] colNames = {"Size","QTY","Amount"};
+        //table
+        String[] colNames = {"Order ID","Customer ID","Size","Quantity","Amount","Status"};
         DefaultTableModel dtm = new DefaultTableModel(colNames,0);
 
-        Sorting[] sortQty = ordersCollection.sortByQty();
-        for(int i=0; i<sortQty.length; i++){
-            Object[] rowData = {sortQty[i].getSize(),sortQty[i].getQuantity(),sortQty[i].getAmount()};
+        Order[] cusArray = ordersCollection.allOrdersByAmount();
+        for(int i=0; i<cusArray.length; i++){
+            Object[] rowData = {cusArray[i].getOrderId(),cusArray[i].getCustomerID(),cusArray[i].getSize(),cusArray[i].getQuantity(),cusArray[i].getAmount(),cusArray[i].getStatus()};
             dtm.addRow(rowData);
         }
 
         JTable cusTable = new JTable(dtm);
         JScrollPane sp = new JScrollPane(cusTable);
-        sp.setBounds(50,50,300,300);
+        sp.setBounds(100,60,600,300);
         add(sp);
     }
 }

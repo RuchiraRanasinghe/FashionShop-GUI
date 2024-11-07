@@ -53,7 +53,8 @@ class HomePageForm extends JFrame{
 		btnStatus.setFont(new Font("",1,20));
 		btnStatus.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent evt){
-				//Status Option
+				dispose();
+				new StatusForm(ordersCollection).setVisible(true);
 			}
 		});
 		buttonPanel.add(btnStatus);
@@ -74,7 +75,8 @@ class HomePageForm extends JFrame{
 		btnDelete.setFont(new Font("",1,20));
 		btnDelete.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent evt){
-				//Delete Action
+				dispose();
+				new DeleteOrderForm(ordersCollection).setVisible(true);
 			}
 		});
 		buttonPanel.add(btnDelete);
