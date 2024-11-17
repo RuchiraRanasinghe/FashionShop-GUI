@@ -108,12 +108,12 @@ class HomePageForm extends JFrame {
         });
 
         // ----------------- Image --------------------
-        imageLabel = new JLabel(new ImageIcon("FashipnShopImage.png"));
+        imageLabel = new JLabel(new ImageIcon("Images\\fashionShop1.png"));
         imageLabel.setBounds(250, 80, 230, 360);
         add(imageLabel);
 
         // ----------------- Footer Label --------------------
-        copyrightLabel = new JLabel("Copyrights © Nipun 2024", SwingConstants.CENTER);
+        copyrightLabel = new JLabel("Copyrights © Ruchira 2024", SwingConstants.CENTER);
         copyrightLabel.setBounds(0, 470, 500, 20);
         add(copyrightLabel);
     }
