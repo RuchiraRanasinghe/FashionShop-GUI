@@ -1,192 +1,181 @@
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
+import java.io.*;
 
-class PlaceOrderForm extends JFrame{
-    // private JLabel lblPlaceORder;
+class PlaceOrderForm extends JFrame {
+    static int orderNumber = 1;
 
-    private JLabel lblOrderId;
-    private JLabel lblOrderIdValue;
-    private JLabel lblCustomerId;
-    private JLabel lblSize;
-    private JLabel lblSizeHint;
-    private JLabel lblQty;
-    private JLabel lblAmount;
-    private JLabel txtAmount;
+    private JLabel lblOrderId, lblPhoneNumber, lblTShirtSize, lblQTY, lblAmount;
+    private JLabel lblOrderID, lblgetAmount;
+    private JTextField txtPhoneNumber, txtTShirtSize, txtQTY;
+    private JButton btnPlace, btnBack;
 
-    // private JTextField txtOrderId;
-    private JTextField txtCustomerId;
-    private JTextField txtSize;
-    private JTextField txtQty;    
-
-    private JButton btnBack;
-    private JButton btnPlaceOrder;
-
-    private boolean isTpNumber;
-    private boolean isSize;
-    private boolean isQty;
-	private double amount;
-
-    // private String orderId;
-
-    private OrdersCollection ordersCollection;
-    
-    // Default Construcotr
-    PlaceOrderForm(OrdersCollection ordersCollection){
-        this.ordersCollection=ordersCollection;
-        
-        setSize(400,400);
+    PlaceOrderForm(List ordersCollection) {
+        setSize(500, 550);
         setTitle("Place Order");
-        setDefaultCloseOperation(EXIT_ON_CLOSE);
+        setDefaultCloseOperation(DISPOSE_ON_CLOSE);
         setLocationRelativeTo(null);
         setLayout(null);
 
-        // Back button
-        btnBack = new JButton("Back");
-        btnBack.setBounds(10, 10, 80, 30);
-        btnBack.setBackground(new Color(240, 128, 128)); // Light red background
-        btnBack.setForeground(Color.WHITE); // White text
-        btnBack.setFont(new Font("SansSerif", Font.BOLD, 14));
-        btnBack.addActionListener(new ActionListener(){
-			public void actionPerformed(ActionEvent evt){
-				//Back to homepage
-				dispose();
-				new HomePageForm(ordersCollection).setVisible(true); 
-			}
-		});
-        add(btnBack);
+        lblOrderID = new JLabel();
+        lblOrderID.setFont(new Font("Arial", Font.PLAIN, 16));
+        lblOrderID.setBounds(180, 100, 250, 35);
+        add(lblOrderID);
+        lblOrderID.setText(generateOrderId());
 
-        // Order ID label
-        lblOrderId = new JLabel("Order ID :");
-        lblOrderId.setBounds(50, 60, 100, 30);
-        lblOrderId.setFont(new Font("SansSerif", Font.PLAIN, 14));
+        btnPlace = new JButton("Place");
+        btnPlace.setFont(new Font("Arial", Font.BOLD, 16));
+        btnPlace.setBackground(new Color(4, 203, 201));
+        btnPlace.setForeground(Color.WHITE);
+        btnPlace.setBounds(300, 430, 125, 50);
+        add(btnPlace);
+        btnPlace.addActionListener(evt -> {
+            if (validatePhoneNumber() && validateSize() && validateQty()) {
+                double amount = calculateAmount();
+                lblgetAmount.setText(String.format("%.2f", amount));
+
+                String orderID = lblOrderID.getText();
+                String size = txtTShirtSize.getText();
+                int qty = Integer.parseInt(txtQTY.getText());
+                String cusID = txtPhoneNumber.getText();
+                String orderStatus = "Processing";
+                Order newOrder = new Order(orderID, size, qty, amount, cusID, orderStatus);
+
+                try {
+                    FileWriter fw = new FileWriter("OrdersDoc.txt", true);
+                    fw.write(newOrder.toString() + "\n");
+                    fw.close();
+                    JOptionPane.showMessageDialog(this, "Order placed!", "Information",
+                            JOptionPane.INFORMATION_MESSAGE);
+                } catch (IOException ex) {
+                    JOptionPane.showMessageDialog(this, "Order not placed!", "Information",
+                            JOptionPane.INFORMATION_MESSAGE);
+                }
+                lblOrderID.setText(generateOrderId());
+                txtPhoneNumber.setText("");
+                txtTShirtSize.setText("");
+                txtQTY.setText("");
+            }
+        });
+
+        btnBack = new JButton("Back");
+        btnBack.setFont(new Font("Arial", Font.BOLD, 16));
+        btnBack.setBackground(new Color(255, 102, 102));
+        btnBack.setForeground(Color.WHITE);
+        btnBack.setBounds(50, 20, 100, 35);
+        add(btnBack);
+        btnBack.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent evt) {
+                new HomePageForm(ordersCollection).setVisible(true);
+                dispose();
+            }
+        });
+
+        lblOrderId = new JLabel("Order Id:");
+        lblOrderId.setFont(new Font("Arial", Font.BOLD, 16));
+        lblOrderId.setBounds(50, 100, 150, 35);
         add(lblOrderId);
 
-        // Order ID value label
-        lblOrderIdValue = new JLabel();
-        
-        //set the generating order id
-        lblOrderIdValue.setText(ordersCollection.generateOrderID());
-        lblOrderIdValue.setBounds(150, 60, 200, 30);
-        lblOrderIdValue.setFont(new Font("SansSerif", Font.PLAIN, 14));
-        add(lblOrderIdValue);
+        lblPhoneNumber = new JLabel("Phone Number:");
+        lblPhoneNumber.setFont(new Font("Arial", Font.BOLD, 16));
+        lblPhoneNumber.setBounds(50, 170, 150, 35);
+        add(lblPhoneNumber);
 
-        // Customer ID label 
-        lblCustomerId = new JLabel("Customer ID :");
-        lblCustomerId.setBounds(50, 100, 100, 30);
-        lblCustomerId.setFont(new Font("SansSerif", Font.PLAIN, 14));
-        add(lblCustomerId);
+        txtPhoneNumber = new JTextField();
+        txtPhoneNumber.setBounds(180, 170, 250, 35);
+        txtPhoneNumber.setFont(new Font("Arial", Font.BOLD, 16));
+        add(txtPhoneNumber);
 
-        //Customer ID text field
-        txtCustomerId = new JTextField();
-        txtCustomerId.setBounds(150, 100, 150, 30);       
-        // Customer ID Validation
-        txtCustomerId.addActionListener(new ActionListener(){
-            public void actionPerformed(ActionEvent evt){  
-                //retun the user input phone number to validation method
-                isTpNumber = ordersCollection.getPhoneNumber(txtCustomerId.getText());                 
-                if(!isTpNumber){
-                    JOptionPane.showMessageDialog(null,"Invalid Phone Number");
-                }                
-            }
-        });
-        add(txtCustomerId);
+        lblTShirtSize = new JLabel("T-Shirt Size:");
+        lblTShirtSize.setFont(new Font("Arial", Font.BOLD, 16));
+        lblTShirtSize.setBounds(50, 240, 150, 35);
+        add(lblTShirtSize);
 
-        // Size label 
-        lblSize = new JLabel("Size :");
-        lblSize.setBounds(50, 140, 100, 30);
-        lblSize.setFont(new Font("SansSerif", Font.PLAIN, 14));
-        add(lblSize);
+        txtTShirtSize = new JTextField();
+        txtTShirtSize.setBounds(180, 240, 250, 35);
+        txtTShirtSize.setFont(new Font("Arial", Font.BOLD, 16));
+        add(txtTShirtSize);
 
-        //Size text field
-        txtSize = new JTextField();
-        txtSize.setBounds(150, 140, 150, 30);
+        lblQTY = new JLabel("Quantity:");
+        lblQTY.setFont(new Font("Arial", Font.BOLD, 16));
+        lblQTY.setBounds(50, 310, 150, 35);
+        add(lblQTY);
 
-        // Size Validation        
-        txtSize.addActionListener(new ActionListener(){
-            public void actionPerformed(ActionEvent evt){
-                // reutn the user input size into validation method
-                isSize = ordersCollection.getSize(txtSize.getText());
-                if(!isSize){
-                    JOptionPane.showMessageDialog(null,"Invalid Size");
-                }
-            }
-        });
-        add(txtSize);
+        txtQTY = new JTextField();
+        txtQTY.setBounds(180, 310, 250, 35);
+        txtQTY.setFont(new Font("Arial", Font.BOLD, 16));
+        add(txtQTY);
 
-        // Size hint label
-        lblSizeHint = new JLabel("(XS/S/M/L/XL/XXL)");
-        lblSizeHint.setBounds(300, 140, 100, 30);
-        lblSizeHint.setFont(new Font("SansSerif", Font.BOLD, 9));
-        add(lblSizeHint);
-
-        // Quantity label 
-        lblQty = new JLabel("QTY :");
-        lblQty.setBounds(50, 180, 100, 30);
-        lblQty.setFont(new Font("SansSerif", Font.PLAIN, 14));
-        add(lblQty);
-
-        // Quantity text field
-        txtQty = new JTextField();
-        txtQty.setBounds(150, 180, 150, 30);
-
-        txtAmount = new JLabel("0.00");
-        txtAmount.setBounds(150, 220, 150, 30);
-        add(txtAmount);
-        
-        // Quantity Validation
-        txtQty.addActionListener(new ActionListener(){
-            public void actionPerformed(ActionEvent evt){
-                isQty = ordersCollection.getQuantity(txtQty.getText());
-                if(!isQty){
-                    JOptionPane.showMessageDialog(null,"Quantity is Not Valid");
-                }else{
-					amount = ordersCollection.getAmount(txtQty.getText(),txtSize.getText());
-                    txtAmount.setText(String.valueOf(amount));
-				}
-            }
-        });
-        add(txtQty);
-
-        // Amount label and text field
-        lblAmount = new JLabel("Amount :");
-        lblAmount.setBounds(50, 220, 100, 30);
-        lblAmount.setFont(new Font("SansSerif", Font.PLAIN, 14));
+        lblAmount = new JLabel("Amount:");
+        lblAmount.setFont(new Font("Arial", Font.BOLD, 16));
+        lblAmount.setBounds(50, 380, 150, 35);
         add(lblAmount);
 
+        lblgetAmount = new JLabel();
+        lblgetAmount.setFont(new Font("Arial", Font.PLAIN, 16));
+        lblgetAmount.setBounds(180, 380, 250, 35);
+        add(lblgetAmount);
+    }
 
-        // Place button
-        btnPlaceOrder = new JButton("Place");
-        btnPlaceOrder.setBounds(250, 280, 80, 40);
-        btnPlaceOrder.setBackground(new Color(0, 150, 136)); // Teal color
-        btnPlaceOrder.setForeground(Color.WHITE); // White text
-        btnPlaceOrder.setFont(new Font("SansSerif", Font.BOLD, 14));
-
-        //Place Order Action
-        btnPlaceOrder.addActionListener(new ActionListener(){
-            public void actionPerformed(ActionEvent evt){
-                double amount = ordersCollection.getAmount(txtQty.getText(),txtSize.getText());
-                txtAmount.setText(String.valueOf(amount));
-                
-                //if((isTpNumber) && (isSize) && (isQty)){
-                    String orderId = lblOrderIdValue.getText();
-                    String phoneNumber = txtCustomerId.getText();
-                    String size = txtSize.getText();
-                    int qty = Integer.parseInt(txtQty.getText());                    
-                    String orderStatus="Processing";                    
-
-                    Order order = new Order(orderId,phoneNumber,size,qty,amount,orderStatus);
-                    ordersCollection.addOrder(order); 
-                    
-                    JOptionPane.showMessageDialog(null,"Order Place Succesfull");
-
-                    dispose();
-                    new PlaceOrderForm(ordersCollection).setVisible(true);
-                //}else{
-                   // JOptionPane.showMessageDialog(null,"Order Place UnSuccessful");
-                //}
+    private String generateOrderId() {
+        String lastLine = null;
+        try {
+            BufferedReader br = new BufferedReader(new FileReader("OrdersDoc.txt"));
+            String line = br.readLine();
+            while (line != null) {
+                lastLine = line;
+                line = br.readLine();
             }
-        });        
-        add(btnPlaceOrder);
+            br.close();
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
+
+        if (lastLine == null || lastLine.length() < 9) {
+            return "ODR#00001";
+        } else {
+            int lastIdNumber = Integer.parseInt(lastLine.substring(4, 9));
+            return String.format("ODR#%05d", lastIdNumber + 1);
+        }
+    }
+
+    public boolean validateSize() {
+        String tShirtSize = txtTShirtSize.getText();
+        if (tShirtSize == null || tShirtSize.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "T-Shirt Size cannot be empty", "Error", JOptionPane.ERROR_MESSAGE);
+            return false;
+        }
+        if (!tShirtSize.matches("(?i)XS|S|M|L|XL|XXL")) {
+            JOptionPane.showMessageDialog(this, "Invalid size. Try again", "Error", JOptionPane.ERROR_MESSAGE);
+            txtTShirtSize.setText("");
+            return false;
+        }
+        return true;
+    }
+
+    public boolean validateQty() {
+        try {
+            int qty = Integer.parseInt(txtQTY.getText());
+            if (qty < 1)
+                throw new NumberFormatException();
+            return true;
+        } catch (NumberFormatException ex) {
+            JOptionPane.showMessageDialog(this, "Quantity must be a valid integer", "Error", JOptionPane.ERROR_MESSAGE);
+            return false;
+        }
+    }
+
+    public boolean validatePhoneNumber() {
+        String phone = txtPhoneNumber.getText();
+        if (!phone.matches("\\d{10}")) {
+            JOptionPane.showMessageDialog(this, "Invalid Phone Number", "Error", JOptionPane.ERROR_MESSAGE);
+            return false;
+        }
+        return true;
+    }
+
+    public double calculateAmount() {
+        return Integer.parseInt(txtQTY.getText()) * 1500.00;
     }
 }

@@ -1,50 +1,73 @@
 import javax.swing.*;
-import javax.swing.table.*;
+import javax.swing.table.DefaultTableModel;
+
 import java.awt.*;
 import java.awt.event.*;
+import java.io.File;
+import java.util.Scanner;
 
-public class AllOrdersForm extends JFrame {
+class AllOrdersForm extends JFrame {
     private JButton btnBack;
 
-    private OrdersCollection ordersCollection;
-
-    AllOrdersForm(OrdersCollection ordersCollection){
-        this.ordersCollection = ordersCollection;
-
-        setSize(800,400);
+    AllOrdersForm(List ordersCollection) {
+        setSize(500, 550);
         setTitle("All Orders");
-        setDefaultCloseOperation(EXIT_ON_CLOSE);
+        setDefaultCloseOperation(DISPOSE_ON_CLOSE);
         setLocationRelativeTo(null);
         setLayout(null);
 
-        btnBack = new JButton("BACK");
-        btnBack.setFont(new Font("Arial",Font.BOLD,15));
-        btnBack.setBackground(new Color(240, 128, 128));
+        btnBack = new JButton("Back");
+        btnBack.setFont(new Font("Arial", Font.BOLD, 16));
+        btnBack.setBackground(new Color(255, 102, 102));
         btnBack.setForeground(Color.WHITE);
-        btnBack.setBounds(0,0,80,30);
+        btnBack.setBounds(20, 20, 100, 35);
         add(btnBack);
-
-        //back button action
-        btnBack.addActionListener(new ActionListener(){
-            public void actionPerformed(ActionEvent evt){
-                dispose();
+        btnBack.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent evt) {
                 new ReportsForm(ordersCollection).setVisible(true);
+                dispose();
             }
         });
 
-        //table
-        String[] colNames = {"Order ID","Customer ID","Size","Quantity","Amount","Status"};
-        DefaultTableModel dtm = new DefaultTableModel(colNames,0);
+        String[] colNames = { "Order ID", "Customer ID", "Size", "Quantity", "Amount", "Status" };
+        DefaultTableModel table = new DefaultTableModel(colNames, 0);
 
-        Order[] cusArray = ordersCollection.getOrderObject();
-        for(int i=0; i<cusArray.length; i++){
-            Object[] rowData = {cusArray[i].getOrderId(),cusArray[i].getCustomerID(),cusArray[i].getSize(),cusArray[i].getQuantity(),cusArray[i].getAmount(),cusArray[i].getStatus()};
-            dtm.addRow(rowData);
+        List orderList = new List(100, 0.25);
+
+        try {
+            Scanner input = new Scanner(new File("OrdersDoc.txt"));
+            while (input.hasNext()) {
+                String line = input.nextLine();
+                String[] rowData = line.split(",");
+                Order newOrder = new Order(rowData[0], rowData[1], Integer.parseInt(rowData[2]),
+                        Double.parseDouble(rowData[3]), rowData[4], rowData[5]);
+
+                orderList.add(newOrder);
+            }
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "Error reading orders file: " + e.getMessage(),
+                    "Error", JOptionPane.ERROR_MESSAGE);
         }
 
-        JTable cusTable = new JTable(dtm);
-        JScrollPane sp = new JScrollPane(cusTable);
-        sp.setBounds(100,60,600,300);
-        add(sp);
+        Order[] copyOrderArray = orderList.getOrderArray();
+
+        for (Order order : copyOrderArray) {
+            if (order != null) {
+                Object[] rowData = {
+                        order.getOrderId(),
+                        order.getCustomerID(),
+                        order.getSize(),
+                        order.getQuantity(),
+                        order.getAmount(),
+                        order.getOrderStatus()
+                };
+                table.addRow(rowData);
+            }
+        }
+
+        JTable cusTable = new JTable(table);
+        JScrollPane scrollPane = new JScrollPane(cusTable);
+        scrollPane.setBounds(20, 80, 440, 400);
+        add(scrollPane);
     }
 }

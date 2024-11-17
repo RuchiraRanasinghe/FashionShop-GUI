@@ -2,148 +2,119 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 
-class HomePageForm extends JFrame{
-	private JLabel lblTitle;
-	private JLabel copyrightLabel;
-	private JLabel imageLabel;
-	
-	private JButton btnSearch;
-	private JButton btnStatus;
-	private JButton btnReports;
-	private JButton btnDelete;
-	private JButton btnPlaceOrder;
-	
-	private OrdersCollection ordersCollection;
+class HomePageForm extends JFrame {
+    private JLabel lblTitle;
+    private JLabel copyrightLabel;
+    private JLabel imageLabel;
+    private JButton btnSearch;
+    private JButton btnViewReports;
+    private JButton btnSetOrderStatus;
+    private JButton btnDeleteOrder;
+    private JButton btnPlaceOrder;
 
-	HomePageForm(OrdersCollection ordersCollection){
-		this.ordersCollection = ordersCollection;
-		
-		setSize(600,600);
-		setTitle("Fashion Shop");
-		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-		setLocationRelativeTo(null);
+    HomePageForm(List ordersCollection) {
+        setSize(500, 550);
+        setTitle("Fashion Shop");
+        setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+        setLocationRelativeTo(null);
+        setLayout(null);
 
-		//------------Add Title Label-----------------
-		lblTitle=new JLabel("Fashion Shop");
-		lblTitle.setBounds(0, 0, 600, 50);
-		lblTitle.setForeground(Color.WHITE);
-		lblTitle.setOpaque(true);
-		lblTitle.setBackground(new Color(33, 150, 243));
-		lblTitle.setFont(new Font("SansSerif",1,50));
-		lblTitle.setHorizontalAlignment(JLabel.CENTER);
-		add(lblTitle);
-		
-		//------------Add Button----------------------
-		JPanel buttonPanel = new JPanel(null);
-		buttonPanel.setPreferredSize(new Dimension(500,400));
-		
-		btnSearch = new JButton("Search");
-		btnSearch.setBounds(50, 100, 200, 40);
-		btnSearch.setFont(new Font("",1,20));
-		btnSearch.addActionListener(new ActionListener(){
-			public void actionPerformed(ActionEvent evt){
-				searchOptionAlert();
-				//dispose();
-			}
-		});
-		buttonPanel.add(btnSearch);
-		
-		btnStatus = new JButton("Status");
-		btnStatus.setBounds(50, 160, 200, 40);
-		btnStatus.setFont(new Font("",1,20));
-		btnStatus.addActionListener(new ActionListener(){
-			public void actionPerformed(ActionEvent evt){
-				dispose();
-				new StatusForm(ordersCollection).setVisible(true);
-			}
-		});
-		buttonPanel.add(btnStatus);
-		
-		btnReports = new JButton("Reports");
-		btnReports.setBounds(50, 220, 200, 40);
-		btnReports.setFont(new Font("",1,20));
-		btnReports.addActionListener(new ActionListener(){
-			public void actionPerformed(ActionEvent evt){
-				dispose();
-				new ReportsForm(ordersCollection).setVisible(true);
-			}
-		});
-		buttonPanel.add(btnReports);
-		
-		btnDelete = new JButton("Delete");
-		btnDelete.setBounds(50,280,200,40);
-		btnDelete.setFont(new Font("",1,20));
-		btnDelete.addActionListener(new ActionListener(){
-			public void actionPerformed(ActionEvent evt){
-				dispose();
-				new DeleteOrderForm(ordersCollection).setVisible(true);
-			}
-		});
-		buttonPanel.add(btnDelete);
-		
-		btnPlaceOrder = new JButton("Place Order");
-		btnPlaceOrder.setBounds(50, 360, 200, 50);
-		btnPlaceOrder.setBackground(new Color(0, 200, 200));
-		btnPlaceOrder.setFont(new Font("",1,20));
-		btnPlaceOrder.addActionListener(new ActionListener(){
-			public void actionPerformed(ActionEvent evt){
-				dispose();
-				new PlaceOrderForm(ordersCollection).setVisible(true);
-			}
-		});
-		buttonPanel.add(btnPlaceOrder);
-
-		// Image label
-        ImageIcon fashionImage = new ImageIcon("E:\\ICET\\FashionShop - GUI\\Images\\fashionShop1.png"); // Replace with your image path
-        imageLabel = new JLabel(fashionImage);
-        imageLabel.setBounds(320, 100, 200, 350); // Position image on the right
-        buttonPanel.add(imageLabel);
-
-		add(buttonPanel,BorderLayout.CENTER);
-		
-		// Copyright label
-        copyrightLabel = new JLabel("Copyrights @ Ruchira 2024", SwingConstants.CENTER);
-        copyrightLabel.setBounds(0, 440, 500, 30);
-        copyrightLabel.setFont(new Font("SansSerif", Font.PLAIN, 12));
-        add(copyrightLabel,BorderLayout.SOUTH);
-
-        // Display the frame
-        setLocationRelativeTo(null); // Center on screen
-        setVisible(true);
-
-	}
-	public void searchOptionAlert(){
-		Object[] options = {"Search Customer", "Search Order", "Cancel"};
+        // ----------------- Title --------------------
+        lblTitle = new JLabel("Fashion Shop", JLabel.CENTER);
+        lblTitle.setFont(new Font("Arial", Font.BOLD, 36));
+        lblTitle.setForeground(Color.WHITE);
+        lblTitle.setBackground(new Color(51, 102, 255));
+        lblTitle.setOpaque(true);
+        lblTitle.setBounds(0, 0, 500, 50);
+        add(lblTitle);
         
-        // Show the option dialog
-        int choice = JOptionPane.showOptionDialog(null,
-                "Please select the option", // Message
-                "Search Options", // Title
-                JOptionPane.DEFAULT_OPTION,
-                JOptionPane.QUESTION_MESSAGE,
-                null,
-                options,
-                options[2]); // Default option is "Cancel"
+        // ----------------- Buttons --------------------
+        btnSearch = new JButton("Search");
+        btnSearch.setFont(new Font("Arial", Font.BOLD, 16));
+        btnSearch.setBounds(50, 80, 200, 50);
+        add(btnSearch);
+        btnSearch.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent evt) {
+                Object[] options = { "Search Customer", "Search Order", "Cancel" };
+                int response = JOptionPane.showOptionDialog(
+                        null,
+                        "Please select the option",
+                        "Search Options",
+                        JOptionPane.YES_NO_CANCEL_OPTION,
+                        JOptionPane.QUESTION_MESSAGE,
+                        null,
+                        options,
+                        options[0]);
 
-        // Handle the user's choice
-        switch (choice) {
-            case 0:
-				new SearchCustomerForm(ordersCollection).setVisible(true);
-                break;
-            case 1:
-                new SearchOrderForm(ordersCollection).setVisible(true);
-                break;
-            case 2:
-                //Alert Canceled
-				// ((AbstractButton) options[2]).addActionListener(new ActionListener(){
-				// 	public void actionPerformed(ActionEvent evt){
-				// 		new HomePageForm(ordersCollection);
-				// 	}
-				// });
-                break;
-            default:
-                System.out.println("Alert closed without selection");
-                break;
-        }
-	}
+                switch (response) {
+                    case 0:
+                        new SearchCustomerForm(ordersCollection).setVisible(true);
+                        break;
+                    case 1:
+                        new SearchOrderForm(ordersCollection).setVisible(true);
+                        break;
+                    case 2:
+                        break;
+                    default:
+                        System.out.println("Unexpected response.");
+                        break;
+                }
+            }
+        });
+
+        btnViewReports = new JButton("Reports");
+        btnViewReports.setFont(new Font("Arial", Font.BOLD, 16));
+        btnViewReports.setBounds(50, 150, 200, 50);
+        add(btnViewReports);
+        btnViewReports.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent evt) {
+                new ReportsForm(ordersCollection).setVisible(true);
+                dispose();
+            }
+        });
+
+        btnSetOrderStatus = new JButton("Status");
+        btnSetOrderStatus.setFont(new Font("Arial", Font.BOLD, 16));
+        btnSetOrderStatus.setBounds(50, 220, 200, 50);
+        add(btnSetOrderStatus);
+        btnSetOrderStatus.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent evt) {
+                new StatusForm(ordersCollection).setVisible(true);
+                dispose();
+            }
+        });
+
+        btnDeleteOrder = new JButton("Delete");
+        btnDeleteOrder.setFont(new Font("Arial", Font.BOLD, 16));
+        btnDeleteOrder.setBounds(50, 290, 200, 50);
+        add(btnDeleteOrder);
+        btnDeleteOrder.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent evt) {
+                new DeleteOrderForm(ordersCollection).setVisible(true);
+                dispose();
+            }
+        });
+        
+        btnPlaceOrder = new JButton("Place Order");
+        btnPlaceOrder.setFont(new Font("Arial", Font.BOLD, 20));
+        btnPlaceOrder.setBackground(new Color(4, 203, 201));
+        btnPlaceOrder.setBounds(50, 360, 200, 80);
+        add(btnPlaceOrder);
+        btnPlaceOrder.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent evt) {
+                new PlaceOrderForm(ordersCollection).setVisible(true);
+                dispose();
+            }
+        });
+
+        // ----------------- Image --------------------
+        imageLabel = new JLabel(new ImageIcon("FashipnShopImage.png"));
+        imageLabel.setBounds(250, 80, 230, 360);
+        add(imageLabel);
+
+        // ----------------- Footer Label --------------------
+        copyrightLabel = new JLabel("Copyrights © Nipun 2024", SwingConstants.CENTER);
+        copyrightLabel.setBounds(0, 470, 500, 20);
+        add(copyrightLabel);
+    }
 }

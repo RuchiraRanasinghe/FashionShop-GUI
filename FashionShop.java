@@ -1,6 +1,6 @@
-class FashionShop{
-	public static void main(String args[]){
-		OrdersCollection ordersCollection = new OrdersCollection();
-		new HomePageForm(ordersCollection).setVisible(true);
-	}
-} 
+public class FashionShop {
+    public static void main(String[] args) {
+        List ordersCollection = new List(100, 0.5);
+        new HomePageForm(ordersCollection).setVisible(true);
+    }
+}
