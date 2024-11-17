@@ -1,137 +1,173 @@
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.Scanner;
 
-public class DeleteOrderForm extends JFrame {
-    private JButton btnBack;
-    private JButton btnSearch;
-    private JButton btnDelete;
-	private JTextField txtOrderId;
-	private JLabel lblOrderId;
-	private JLabel lblCusId;
-	private JLabel lblSize;
-	private JLabel lblQty;
-	private JLabel lblAmount;
-	private JLabel lblStatus;
-	private JLabel lblCusIdValue;
-	private JLabel lblSizeValue;
-	private JLabel lblQtyValue;
-	private JLabel lblAmountValue;
-	private JLabel lblStatusValue;
+class DeleteOrderForm extends JFrame {
+    private JLabel lblCustID, lblSize, lblQTY, lblAmount, lblStatus;
+    private JLabel lblGetCustID, lblGetSize, lblGetQTY, lblGetAmount, lblGetStatus;
+    private JButton btnBack, btnSearch, btnDeleteOrder;
+    private JLabel lblEnterID;
+    private JTextField txtOrderID;
+    private List orderList;
 
-    private OrdersCollection ordersCollection;
+    DeleteOrderForm(List ordersCollection) {
 
-    DeleteOrderForm(OrdersCollection ordersCollection){
-        this.ordersCollection = ordersCollection;
+        this.orderList = ordersCollection;
 
-        setSize(500,500);
-		setTitle("Delete Form");
-		setDefaultCloseOperation(EXIT_ON_CLOSE);
-		setLocationRelativeTo(null);
-		setLayout(null);
-		
-		btnBack = new JButton("Back");
-		btnBack.setBounds(0,0,80,30);
-		btnBack.setBackground(new Color(240,128,128));
-		btnBack.setForeground(Color.WHITE);
-		btnBack.setFont(new Font("SansSerif",1,14));
-		btnBack.addActionListener(new ActionListener (){
-			public void actionPerformed(ActionEvent evt){
-				dispose();
+        try {
+            Scanner input = new Scanner(new File("OrdersDoc.txt"));
+            while (input.hasNext()) {
+                String line = input.nextLine();
+                String[] rowData = line.split(",");
+                Order newOrder = new Order(rowData[0], rowData[1], Integer.parseInt(rowData[2]),
+                        Double.parseDouble(rowData[3]), rowData[4], rowData[5]);
+
+                orderList.add(newOrder);
+            }
+        } catch (IOException e) {
+            JOptionPane.showMessageDialog(this, "Error reading orders file: " + e.getMessage(),
+                    "Error", JOptionPane.ERROR_MESSAGE);
+        }
+
+        setSize(500, 550);
+        setTitle("Delete Order");
+        setDefaultCloseOperation(EXIT_ON_CLOSE);
+        setLocationRelativeTo(null);
+        setLayout(null);
+
+        btnBack = new JButton("Back");
+        btnBack.setFont(new Font("Arial", Font.BOLD, 16));
+        btnBack.setBackground(new Color(255, 102, 102));
+        btnBack.setForeground(Color.WHITE);
+        btnBack.setBounds(20, 20, 100, 35);
+        add(btnBack);
+        btnBack.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent evt) {
                 new HomePageForm(ordersCollection).setVisible(true);
-			}
-		});
-		add(btnBack);
-
-		JPanel searchPanel = new JPanel();
-		searchPanel.setBounds(30,40,400,40);
-
-		lblOrderId = new JLabel("Enter Order ID : ");
-		lblOrderId.setFont(new Font("SansSerif",Font.BOLD,14));
-        txtOrderId = new JTextField(15);
-		txtOrderId.setPreferredSize(new Dimension(100,30));
-        btnSearch = new JButton("Search");
-		btnSearch.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent evt){
-				Order order = ordersCollection.searchOrder(txtOrderId.getText());
-
-				if (order!=null) {
-					lblCusIdValue.setText(order.getCustomerID());
-					lblSizeValue.setText(order.getSize());
-					lblQtyValue.setText(""+order.getQuantity());
-					lblAmountValue.setText(""+order.getAmount());
-					lblStatusValue.setText(order.getStatus());
-				}else{
-					JOptionPane.showMessageDialog(null,"Order not found");
-				}
-			}
-		});
-
-		searchPanel.add(lblOrderId);
-		searchPanel.add(txtOrderId);
-		searchPanel.add(btnSearch);
-		add(searchPanel);
-
-		lblCusId = new JLabel("Customer ID : ");
-		lblCusId.setBounds(30, 90, 150, 40);
-		lblCusId.setFont(new Font("SansSerif",Font.BOLD,14));
-		add(lblCusId);
-
-		lblCusIdValue = new JLabel();
-		lblCusIdValue.setBounds(200, 90, 150, 40);
-		lblCusIdValue.setFont(new Font("SansSeerif",Font.BOLD,14));
-		add(lblCusIdValue);
-		
-		lblSize = new JLabel("Size : ");
-		lblSize.setBounds(30, 150, 150, 40);
-		lblSize.setFont(new Font("SansSerif",Font.BOLD,14));
-		add(lblSize);
-
-		lblSizeValue = new JLabel();
-		lblSizeValue.setBounds(200, 150, 150, 40);
-		lblSizeValue.setFont(new Font("SansSeerif",Font.BOLD,14));
-		add(lblSizeValue);
-
-		lblQty = new JLabel("QTY : ");
-		lblQty.setBounds(30, 210, 150, 40);
-		lblQty.setFont(new Font("SansSerif",Font.BOLD,14));
-		add(lblQty);
-
-		lblQtyValue = new JLabel();
-		lblQtyValue.setBounds(200, 210, 150, 40);
-		lblQtyValue.setFont(new Font("SansSeerif",Font.BOLD,14));
-		add(lblQtyValue);
-
-		lblAmount = new JLabel("Amount : ");
-		lblAmount.setBounds(30, 270, 150, 40);
-		lblAmount.setFont(new Font("SansSerif",Font.BOLD,14));
-		add(lblAmount);
-
-		lblAmountValue = new JLabel();
-		lblAmountValue.setBounds(200, 270, 150, 40);
-		lblAmountValue.setFont(new Font("SansSeerif",Font.BOLD,14));
-		add(lblAmountValue);
-		
-		lblStatus = new JLabel("Status : ");
-		lblStatus.setBounds(30, 330, 150, 40);
-		lblStatus.setFont(new Font("SansSerif",Font.BOLD,14));
-		add(lblStatus);
-
-		lblStatusValue = new JLabel();
-		lblStatusValue.setBounds(200, 330, 150, 40);
-		lblStatusValue.setFont(new Font("SansSeerif",Font.BOLD,14));
-		add(lblStatusValue);
-
-        btnDelete = new JButton("Delete Order");
-        btnDelete.setBounds(320,400,150,30);
-        btnDelete.setBackground(new Color(102,178,255));
-        btnDelete.setForeground(Color.WHITE);
-        btnDelete.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent evt){
-                //Status Option
-               ordersCollection.deleteConfimation(ordersCollection.searchOrder(txtOrderId.getText()));
+                dispose();
             }
         });
-        add(btnDelete);
+
+        lblEnterID = new JLabel("Enter Order ID");
+        lblEnterID.setFont(new Font("Arial", Font.BOLD, 16));
+        lblEnterID.setBounds(20, 85, 150, 30);
+        add(lblEnterID);
+
+        txtOrderID = new JTextField(15);
+        txtOrderID.setFont(new Font("Arial", Font.BOLD, 16));
+        txtOrderID.setBounds(170, 85, 180, 30);
+        add(txtOrderID);
+
+        btnSearch = new JButton("Search");
+        btnSearch.setBounds(360, 85, 100, 30);
+        add(btnSearch);
+        btnSearch.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent evt) {
+                boolean isFound = false;
+                for (Order order : orderList.getOrderArray()) {
+                    if (txtOrderID.getText().equalsIgnoreCase(order.getOrderId())) {
+                        lblGetSize.setText(order.getSize());
+                        lblGetQTY.setText(String.valueOf(order.getQuantity()));
+                        lblGetAmount.setText(String.valueOf(order.getAmount()));
+                        lblGetCustID.setText(order.getCustomerID());
+                        lblGetStatus.setText(order.getOrderStatus());
+                        isFound = true;
+                        break;
+                    }
+                }
+                if (!isFound) {
+                    JOptionPane.showMessageDialog(null, "Order not Found");
+                }
+            }
+        });
+
+        lblCustID = new JLabel("Customer ID:");
+        lblCustID.setFont(new Font("Arial", Font.BOLD, 16));
+        lblCustID.setBounds(20, 170, 150, 25);
+        add(lblCustID);
+
+        lblSize = new JLabel("Size:");
+        lblSize.setFont(new Font("Arial", Font.BOLD, 16));
+        lblSize.setBounds(20, 220, 150, 25);
+        add(lblSize);
+
+        lblQTY = new JLabel("Quantity:");
+        lblQTY.setFont(new Font("Arial", Font.BOLD, 16));
+        lblQTY.setBounds(20, 270, 150, 25);
+        add(lblQTY);
+
+        lblAmount = new JLabel("Amount:");
+        lblAmount.setFont(new Font("Arial", Font.BOLD, 16));
+        lblAmount.setBounds(20, 320, 150, 25);
+        add(lblAmount);
+
+        lblStatus = new JLabel("Status:");
+        lblStatus.setFont(new Font("Arial", Font.BOLD, 16));
+        lblStatus.setBounds(20, 370, 150, 25);
+        add(lblStatus);
+
+        lblGetCustID = new JLabel("");
+        lblGetCustID.setFont(new Font("Arial", Font.PLAIN, 16));
+        lblGetCustID.setBounds(150, 170, 150, 25);
+        add(lblGetCustID);
+
+        lblGetSize = new JLabel("");
+        lblGetSize.setFont(new Font("Arial", Font.PLAIN, 16));
+        lblGetSize.setBounds(150, 220, 150, 25);
+        add(lblGetSize);
+
+        lblGetQTY = new JLabel("");
+        lblGetQTY.setFont(new Font("Arial", Font.PLAIN, 16));
+        lblGetQTY.setBounds(150, 270, 150, 25);
+        add(lblGetQTY);
+
+        lblGetAmount = new JLabel("");
+        lblGetAmount.setFont(new Font("Arial", Font.PLAIN, 16));
+        lblGetAmount.setBounds(150, 320, 150, 25);
+        add(lblGetAmount);
+
+        lblGetStatus = new JLabel("");
+        lblGetStatus.setFont(new Font("Arial", Font.PLAIN, 16));
+        lblGetStatus.setBounds(150, 370, 150, 25);
+        add(lblGetStatus);
+
+        btnDeleteOrder = new JButton("Delete Order");
+        btnDeleteOrder.setFont(new Font("Arial",Font.BOLD,12));
+        btnDeleteOrder.setBackground(new Color(135,193,255));
+        btnDeleteOrder.setForeground(Color.WHITE);
+        btnDeleteOrder.setBounds(320,400,150,30);
+        add(btnDeleteOrder);
+        btnDeleteOrder.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent evt) {
+                String id = txtOrderID.getText();
+        
+                List updatedOrderList = new List(100, 0.25);
+                try (Scanner input = new Scanner(new File("OrdersDoc.txt"))) {
+                    while (input.hasNext()) {
+                        String line = input.nextLine();
+                        String[] rowData = line.split(",");
+                        if (rowData[0].equalsIgnoreCase(id)) {
+                            continue;
+                        }
+                        Order order = new Order(rowData[0], rowData[1], Integer.parseInt(rowData[2]),
+                                Double.parseDouble(rowData[3]), rowData[4], rowData[5]);
+                        updatedOrderList.add(order);
+                    }
+                    try (FileWriter fw = new FileWriter("OrdersDoc.txt")) {
+                        for (Order order : updatedOrderList.getOrderArray()) {
+                            fw.write(order.toString() + "\n");
+                        }
+                    }
+                } catch (IOException ex) {
+                    JOptionPane.showMessageDialog(null, "Error deleting order: " + ex.getMessage(),
+                            "Error", JOptionPane.ERROR_MESSAGE);
+                }
+            }
+        });
+        
     }
 }

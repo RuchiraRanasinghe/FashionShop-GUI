@@ -2,131 +2,129 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 
-class ReportsForm extends JFrame{
+public class ReportsForm extends JFrame {
     private JButton btnBack;
-    private JButton btnViewCus;
-    private JButton btnBestInCus;
-    private JButton btnAllCus;
-    private JButton btnCatByQty;
-    private JButton btnCatByAmount;
-    private JButton btnOrderByAmount;
-    private JButton btnAllOrders;
+    private JButton ViewCustomers;
+    private JButton BestInCustomers;
+    private JButton AllCustomers;
+    private JButton CategorizedByQty;
+    private JButton CategorizedByAmount;
+    private JButton OrderByAmount;
+    private JButton AllOrders;
 
-    private OrdersCollection ordersCollection;
-
-    ReportsForm(OrdersCollection ordersCollection){
-        this.ordersCollection = ordersCollection;
-
-        setSize(650,280);
+    ReportsForm(List ordersCollection) {
+        setSize(500, 550);
         setTitle("View Reports");
-        setDefaultCloseOperation(EXIT_ON_CLOSE);
+        setDefaultCloseOperation(DISPOSE_ON_CLOSE);
         setLocationRelativeTo(null);
         setLayout(null);
 
-        // Back button
         btnBack = new JButton("Back");
-        btnBack.setBounds(10, 10, 80, 30);
-        btnBack.setBackground(new Color(240, 128, 128)); // Light red background
-        btnBack.setForeground(Color.WHITE); // White text
-        btnBack.setFont(new Font("SansSerif", Font.BOLD, 14));
-        btnBack.addActionListener(new ActionListener(){
-			public void actionPerformed(ActionEvent evt){
-				//Back to homepage
-				dispose();
-				new HomePageForm(ordersCollection).setVisible(true); 
-			}
-		});
+        btnBack.setFont(new Font("Arial", Font.BOLD, 16));
+        btnBack.setBackground(new Color(255, 102, 102));
+        btnBack.setForeground(Color.WHITE);
+        btnBack.setBounds(10, 10, 100, 35);
         add(btnBack);
-
-        btnViewCus = new JButton("View Customers");
-        btnViewCus.setBounds(25, 80, 170, 30);
-        btnViewCus.setBackground(new Color(0,204,51));
-        btnViewCus.setForeground(Color.WHITE);
-        btnViewCus.setFont(new Font("SansSerif", Font.BOLD, 14));
-        btnViewCus.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent evt){
+        btnBack.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent evt) {
                 dispose();
+                new HomePageForm(ordersCollection).setVisible(true);
+            }
+        });
+
+        int buttonWidth = 250;
+        int buttonHeight = 35;
+        int centerX = (getWidth() - buttonWidth) / 2;
+
+        ViewCustomers = new JButton("View Customers");
+        ViewCustomers.setFont(new Font("Arial", Font.BOLD, 16));
+        ViewCustomers.setBackground(new Color(0, 204, 51));
+        ViewCustomers.setForeground(Color.WHITE);
+        ViewCustomers.setBounds(centerX, 100, buttonWidth, buttonHeight);
+        add(ViewCustomers);
+        ViewCustomers.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent evt) {
                 new ViewCustomersForm(ordersCollection).setVisible(true);
+                dispose();
             }
         });
-        add(btnViewCus);
 
-        btnBestInCus = new JButton("Best In Customers");
-        btnBestInCus.setBounds(25, 130, 170, 30);
-        btnBestInCus.setBackground(new Color(0,204,51));
-        btnBestInCus.setForeground(Color.WHITE);
-        btnBestInCus.setFont(new Font("SansSerif", Font.BOLD, 14));
-        btnBestInCus.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent evt){
-                dispose();
+        BestInCustomers = new JButton("Best In Customers");
+        BestInCustomers.setFont(new Font("Arial", Font.BOLD, 16));
+        BestInCustomers.setBackground(new Color(0, 204, 51));
+        BestInCustomers.setForeground(Color.WHITE);
+        BestInCustomers.setBounds(centerX, 150, buttonWidth, buttonHeight);
+        add(BestInCustomers);
+        BestInCustomers.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent evt) {
                 new BestInCusForm(ordersCollection).setVisible(true);
+                dispose();
             }
         });
-        add(btnBestInCus);
 
-        btnAllCus = new JButton("All Customers");
-        btnAllCus.setBounds(25, 180, 170, 30);
-        btnAllCus.setBackground(new Color(0,204,51));
-        btnAllCus.setForeground(Color.WHITE);
-        btnAllCus.setFont(new Font("SansSerif", Font.BOLD, 14));
-        btnAllCus.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent evt){
-                dispose();
+        AllCustomers = new JButton("All Customers");
+        AllCustomers.setFont(new Font("Arial", Font.BOLD, 16));
+        AllCustomers.setBackground(new Color(0, 204, 51));
+        AllCustomers.setForeground(Color.WHITE);
+        AllCustomers.setBounds(centerX, 200, buttonWidth, buttonHeight);
+        add(AllCustomers);
+        AllCustomers.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent evt) {
                 new AllCustomersForm(ordersCollection).setVisible(true);
+            dispose();
             }
         });
-        add(btnAllCus);
 
-        btnCatByQty = new JButton("Categorized By QTY");
-        btnCatByQty.setBounds(220, 100, 200, 30);
-        btnCatByQty.setBackground(Color.BLUE);
-        btnCatByQty.setForeground(Color.WHITE);
-        btnCatByQty.setFont(new Font("SansSerif", Font.BOLD, 14));
-        btnCatByQty.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent evt){
-                dispose();
+        CategorizedByQty = new JButton("Categorized By Qty");
+        CategorizedByQty.setFont(new Font("Arial", Font.BOLD, 16));
+        CategorizedByQty.setBackground(new Color(0, 51, 153));
+        CategorizedByQty.setForeground(Color.WHITE);
+        CategorizedByQty.setBounds(centerX, 250, buttonWidth, buttonHeight);
+        add(CategorizedByQty);
+        CategorizedByQty.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent evt) {
                 new CatByQtyForm(ordersCollection).setVisible(true);
+            dispose();
             }
         });
-        add(btnCatByQty);
 
-        btnCatByAmount = new JButton("Categorized By Amount");
-        btnCatByAmount.setBounds(220, 160, 200, 30);
-        btnCatByAmount.setBackground(Color.BLUE);
-        btnCatByAmount.setForeground(Color.WHITE);
-        btnCatByAmount.setFont(new Font("SansSerif", Font.BOLD, 14));
-        btnCatByAmount.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent evt){
-                dispose();
+        CategorizedByAmount = new JButton("Categorized By Amount");
+        CategorizedByAmount.setFont(new Font("Arial", Font.BOLD, 16));
+        CategorizedByAmount.setBackground(new Color(0, 51, 153));
+        CategorizedByAmount.setForeground(Color.WHITE);
+        CategorizedByAmount.setBounds(centerX, 300, buttonWidth, buttonHeight);
+        add(CategorizedByAmount);
+        CategorizedByAmount.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent evt) {
                 new CatByAmountForm(ordersCollection).setVisible(true);
+                dispose();
             }
         });
-        add(btnCatByAmount);
 
-        btnOrderByAmount = new JButton("Orders By Amount");
-        btnOrderByAmount.setBounds(440, 100, 170, 30);
-        btnOrderByAmount.setBackground(Color.GRAY);
-        btnOrderByAmount.setForeground(Color.WHITE);
-        btnOrderByAmount.setFont(new Font("SansSerif", Font.BOLD, 14));
-        btnOrderByAmount.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent evt){
-                dispose();
-                new OByAmountForm(ordersCollection).setVisible(true);
+        OrderByAmount = new JButton("Order By Amount");
+        OrderByAmount.setFont(new Font("Arial", Font.BOLD, 16));
+        OrderByAmount.setBackground(new Color(102, 102, 102));
+        OrderByAmount.setForeground(Color.WHITE);
+        OrderByAmount.setBounds(centerX, 350, buttonWidth, buttonHeight);
+        add(OrderByAmount);
+        OrderByAmount.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent evt) {
+                new OrderByAmountForm(ordersCollection).setVisible(true);
+            dispose();
             }
         });
-        add(btnOrderByAmount);
 
-        btnAllOrders = new JButton("All Orders");
-        btnAllOrders.setBounds(440, 160, 170, 30);
-        btnAllOrders.setBackground(Color.GRAY);
-        btnAllOrders.setForeground(Color.WHITE);
-        btnAllOrders.setFont(new Font("SansSerif", Font.BOLD, 14));
-        btnAllOrders.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent evt){
-                dispose();
+        AllOrders = new JButton("All Orders");
+        AllOrders.setFont(new Font("Arial", Font.BOLD, 16));
+        AllOrders.setBackground(new Color(102, 102, 102));
+        AllOrders.setForeground(Color.WHITE);
+        AllOrders.setBounds(centerX, 400, buttonWidth, buttonHeight);
+        add(AllOrders);
+        AllOrders.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent evt) {
                 new AllOrdersForm(ordersCollection).setVisible(true);
+                dispose();
             }
         });
-        add(btnAllOrders);
     }
 }

@@ -1,6 +1,10 @@
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
+import java.io.*;
+import java.util.Scanner;
+
+import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 
 public class SearchCustomerForm extends JFrame {
@@ -11,82 +15,110 @@ public class SearchCustomerForm extends JFrame {
     private JTable table;
     private DefaultTableModel model;
     private JLabel totalLabel;
-    private OrdersCollection ordersCollection; 
 
-    SearchCustomerForm(OrdersCollection ordersCollection) {
-        this.ordersCollection = ordersCollection;
+    SearchCustomerForm(List ordersCollection) {
         setSize(500, 600);
         setTitle("Fashion Shop");
         setDefaultCloseOperation(DISPOSE_ON_CLOSE);
         setLocationRelativeTo(null);
-        setLayout(new BorderLayout());
+        setLayout(null);
 
-        // ----------------- Back Button Panel -----------------
-        JPanel pnlBack = new JPanel(new FlowLayout(FlowLayout.LEFT));
         btnBack = new JButton("Back");
         btnBack.setFont(new Font("Arial", Font.BOLD, 16));
-        btnBack.setPreferredSize(new Dimension(100, 35));
         btnBack.setBackground(new Color(255, 102, 102));
         btnBack.setForeground(Color.WHITE);
+        btnBack.setBounds(20, 20, 100, 35);
+        add(btnBack);
+        btnBack.addActionListener(evt -> dispose());
 
-        btnBack.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent evt) {
-                dispose(); 
-            }
-        });
+        lblEnterID = new JLabel("Enter Customer ID");
+        lblEnterID.setFont(new Font("Arial", Font.BOLD, 16));
+        lblEnterID.setBounds(20, 85, 150, 30);
+        add(lblEnterID);
 
-        pnlBack.add(btnBack);
-        add("North", pnlBack);
-
-        // ----------------- Search Panel -----------------
-        JPanel searchPanel = new JPanel(new FlowLayout());
-        lblEnterID = new JLabel("Enter Customer ID :");
         txtCusID = new JTextField(15);
+        txtCusID.setFont(new Font("Arial", Font.BOLD, 16));
+        txtCusID.setBounds(170, 85, 180, 30);
+        add(txtCusID);
+
         btnSearch = new JButton("Search");
+        btnSearch.setBounds(360, 85, 100, 30);
+        add(btnSearch);
+
+        String[] columnNames = { "Size", "QTY", "Amount" };
+        model = new DefaultTableModel(columnNames, 0);
 
         btnSearch.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent evt) {
                 String customerId = txtCusID.getText().trim();
-                Order[] foundOrders = ordersCollection.searchCustomerID(customerId);
+                List searchCustomerList = new List(100, 0.25);
         
                 model.setRowCount(0);
         
-                if (foundOrders.length > 0) {
-                    double totalAmount = 0;
-                    for (Order foundOrder : foundOrders) {
-                        Object[] rowData = {foundOrder.getSize(), foundOrder.getQuantity(), foundOrder.getAmount()};
-                        model.addRow(rowData); 
-                        totalAmount += foundOrder.getAmount();
+                try (Scanner input = new Scanner(new File("OrdersDoc.txt"))) {
+                    while (input.hasNext()) {
+                        String line = input.nextLine();
+                        String[] rowData = line.split(",");
+        
+                        Order newOrder = new Order(rowData[0], rowData[1], Integer.parseInt(rowData[2]),
+                                Double.parseDouble(rowData[3]), rowData[4], rowData[5]);
+        
+                        if (newOrder.getCustomerID().equals(customerId)) {
+                            searchCustomerList.add(newOrder);
+                        }
                     }
-                    totalLabel.setText(String.format("Total: %.2f", totalAmount));
-                } else {
-                    JOptionPane.showMessageDialog(SearchCustomerForm.this, "Order not found for Customer ID: " + customerId, "Error", JOptionPane.ERROR_MESSAGE);
-                    totalLabel.setText("Total: 0.00");
+                } catch (Exception e) {
+                    JOptionPane.showMessageDialog(SearchCustomerForm.this,
+                            "Error reading orders file: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+                }
+        
+                String[] allSizes = { "XS", "S", "M", "L", "XL", "XXL" };
+                double totalAmount = 0;
+        
+                for (String size : allSizes) {
+                    int totalQtyForSize = 0;
+                    double totalAmountForSize = 0;
+        
+                    for (int i = 0; i < searchCustomerList.size(); i++) {
+                        Order foundOrder = searchCustomerList.getOrderArray()[i];
+                        if (foundOrder.getSize().equals(size)) {
+                            totalQtyForSize += foundOrder.getQuantity();
+                            totalAmountForSize += foundOrder.getAmount();
+                        }
+                    }
+        
+                    if (totalQtyForSize > 0) {
+                        model.addRow(new Object[] { size, totalQtyForSize, String.format("%.2f", totalAmountForSize) });
+                        totalAmount += totalAmountForSize;
+                    } else {
+                        model.addRow(new Object[] { size, 0, "0.00" });
+                    }
+                }
+                totalLabel.setText(String.format("Total: %.2f", totalAmount));
+        
+                if (searchCustomerList.size() == 0) {
+                    JOptionPane.showMessageDialog(SearchCustomerForm.this,
+                            "Order not found for Customer ID: " + customerId, "Error", JOptionPane.ERROR_MESSAGE);
                 }
             }
         });
-        
-        searchPanel.add(lblEnterID);
-        searchPanel.add(txtCusID);
-        searchPanel.add(btnSearch);
 
-        // ----------------- Table Panel -----------------
-        String[] columnNames = {"Size", "QTY", "Amount"};
-        model = new DefaultTableModel(columnNames, 0);
         table = new JTable(model);
         table.setRowHeight(30);
+        DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
+        centerRenderer.setHorizontalAlignment(SwingConstants.CENTER);
+
+        for (int i = 0; i < table.getColumnCount(); i++) {
+            table.getColumnModel().getColumn(i).setCellRenderer(centerRenderer);
+        }
+
         JScrollPane tableScrollPane = new JScrollPane(table);
+        tableScrollPane.setBounds(20, 140, 440, 350);
+        add(tableScrollPane);
 
-        // ----------------- Center Panel -----------------
-        JPanel centerPanel = new JPanel(new BorderLayout());
-        centerPanel.add(searchPanel, BorderLayout.NORTH);
-        centerPanel.add(tableScrollPane, BorderLayout.CENTER);
-        add(centerPanel, BorderLayout.CENTER);
-
-        // ----------------- Total Panel -----------------
-        JPanel bottonPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
-        totalLabel = new JLabel("");
-        bottonPanel.add(totalLabel);
-        add(bottonPanel, BorderLayout.SOUTH);
+        totalLabel = new JLabel("Total: 0.00");
+        totalLabel.setFont(new Font("Arial", Font.BOLD, 16));
+        totalLabel.setBounds(20, 500, 200, 30);
+        add(totalLabel);
     }
 }
