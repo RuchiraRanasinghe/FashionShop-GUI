@@ -108,7 +108,7 @@ class HomePageForm extends JFrame {
         });
 
         // ----------------- Image --------------------
-        imageLabel = new JLabel(new ImageIcon("Images\\fashionShop1.png"));
+        imageLabel = new JLabel(new ImageIcon("E:\\ICET\\FashionShop - GUI\\Images\\fashionImg-removebg.png"));
         imageLabel.setBounds(250, 80, 230, 360);
         add(imageLabel);
 
